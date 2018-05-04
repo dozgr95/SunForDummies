@@ -9,7 +9,10 @@ import com.example.doz.sunfordummies.Utils.LocationDTO;
 public class Locator {
 
     public LocationDTO getLocation(){
+
         //coarse...
-        return null;
+
+        //set and return LocationDTO
+        return new LocationDTO(8.2, 45.0); //fix TEMPORARY
     }
 }

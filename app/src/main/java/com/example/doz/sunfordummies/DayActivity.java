@@ -21,8 +21,7 @@ public class DayActivity extends AppCompatActivity {
         setContentView(R.layout.day_activity);
 
         //get Date
-
-
+            targetDate = new Date();
         //get Location
         LocationDTO currentLocation = new Locator().getLocation();
 
