@@ -1,5 +1,10 @@
 package com.example.doz.sunfordummies.Business.Location;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+
 import com.example.doz.sunfordummies.Utils.LocationDTO;
 
 /**
@@ -8,11 +13,15 @@ import com.example.doz.sunfordummies.Utils.LocationDTO;
 
 public class Locator {
 
-    public LocationDTO getLocation(){
+    public LocationDTO getLocation(Activity activity){
+        Intent service = new Intent(activity, LocationService.class);
+        activity.startService(service);
 
-        //coarse...
+        LocationServiceConnection serviceConnection = new LocationServiceConnection();
+        activity.bindService(service, serviceConnection, Context.BIND_AUTO_CREATE);
+        LocationService.LocationServiceBinder binder = serviceConnection.getBinder();
+        Location location = binder.getLastKnownLocation();
 
-        //set and return LocationDTO
-        return new LocationDTO(8.2, 45.0); //fix TEMPORARY
+        return new LocationDTO(location.getLatitude(), location.getLongitude()); //fix TEMPORARY
     }
 }
