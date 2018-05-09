@@ -5,10 +5,6 @@ import com.example.doz.sunfordummies.Utils.SunDataDTO;
 
 import java.util.Date;
 
-/**
- * Created by Doz on 02.05.2018.
- */
-
 public class SunData {
 
     public SunDataDTO getSunData(Date date, LocationDTO location){

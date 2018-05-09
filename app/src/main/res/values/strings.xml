@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">SunForDummies</string>
+    <string name="loading">loading...</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="maxposition">Max. Sun Position at</string>
+    <string name="above">Time above 35°</string>
+    <string name="uv">UV-Index</string>
+    <string name="sunburn">Sunburn Potential</string>
+    <string name="vitamin">Vitamin D3 Potential</string>
+    <string name="energy">Amount Energy with PV-Panel</string>
+    <string name="info"> i</string>
+    <string name="yesterday">&lt;</string>
+    <string name="tomorrow">&gt;</string>
 </resources>

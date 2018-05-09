@@ -1,19 +1,267 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sunForDummies"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.doz.sunfordummies.DayActivity">
 
     <TextView
+        android:id="@+id/txtAppTitle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Sun For Dummies!"
+        app:layout_constraintBottom_toTopOf="@+id/txtDateCity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnYesterday"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
+        android:text="@string/yesterday"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnTomorrow"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="60dp"
+        android:text="@string/tomorrow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtDateCity"
+        android:layout_width="239dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toStartOf="@+id/btnTomorrow"
+        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintStart_toEndOf="@+id/btnYesterday"
+        app:layout_constraintTop_toBottomOf="@+id/txtAppTitle" />
+
+    <TextView
+        android:id="@+id/titleSunrise"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/sunrise"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnYesterday" />
+
+    <TextView
+        android:id="@+id/titleSunset"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/sunset"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleSunrise" />
+
+    <TextView
+        android:id="@+id/titleMaxPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/maxposition"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleSunset" />
+
+    <TextView
+        android:id="@+id/titleAbove"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/above"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleMaxPosition" />
+
+    <TextView
+        android:id="@+id/titleUV"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/uv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleAbove" />
+
+    <TextView
+        android:id="@+id/titleSunburn"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/sunburn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleUV" />
+
+    <TextView
+        android:id="@+id/titleVitamin"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/vitamin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleSunburn" />
+
+    <TextView
+        android:id="@+id/titleEnergy"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/energy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleVitamin" />
+
+    <TextView
+        android:id="@+id/txtSunrise"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginEnd="124dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtDateCity" />
+
+    <TextView
+        android:id="@+id/txtSunset"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginEnd="124dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSunrise" />
+
+    <TextView
+        android:id="@+id/txtMaxPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginEnd="124dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSunset" />
+
+    <TextView
+        android:id="@+id/txtAbove"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toStartOf="@+id/infoAbove"
+        app:layout_constraintTop_toBottomOf="@+id/txtMaxPosition" />
+
+    <TextView
+        android:id="@+id/txtUV"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toStartOf="@+id/infoUV"
+        app:layout_constraintTop_toBottomOf="@+id/txtAbove" />
+
+    <TextView
+        android:id="@+id/txtSunburn"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toStartOf="@+id/infoSunBurn"
+        app:layout_constraintTop_toBottomOf="@+id/txtUV" />
+
+    <TextView
+        android:id="@+id/txtVitamin"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toStartOf="@+id/infoVitamin"
+        app:layout_constraintTop_toBottomOf="@+id/txtSunburn" />
+
+    <TextView
+        android:id="@+id/txtEnergy"
+        android:layout_width="56dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toStartOf="@+id/infoEnergy"
+        app:layout_constraintTop_toBottomOf="@+id/txtVitamin" />
+
+    <Button
+        android:id="@+id/infoVitamin"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoSunBurn" />
+
+    <Button
+        android:id="@+id/infoSunBurn"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoUV" />
+
+    <Button
+        android:id="@+id/infoUV"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoAbove" />
+
+    <Button
+        android:id="@+id/infoEnergy"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoVitamin" />
+
+    <Button
+        android:id="@+id/infoAbove"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="168dp"
+        android:text="@string/info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTomorrow" />
 </android.support.constraint.ConstraintLayout>
