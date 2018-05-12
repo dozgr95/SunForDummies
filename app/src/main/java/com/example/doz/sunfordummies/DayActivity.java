@@ -13,6 +13,7 @@ import com.example.doz.sunfordummies.Business.Location.LocationDTO;
 import com.example.doz.sunfordummies.Business.Location.LocationObserver;
 import com.example.doz.sunfordummies.Business.Location.LocationPermissionException;
 import com.example.doz.sunfordummies.Business.Location.Locator;
+import com.example.doz.sunfordummies.Business.Location.LocatorFactory;
 
 import java.security.ProviderException;
 import java.util.Date;
@@ -59,8 +60,8 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void registerLocationObserver() throws LocationPermissionException {
-        locator = new AndroidLocator(getApplicationContext());
+    private void registerLocationObserver() throws LocationPermissionException, ProviderException {
+        locator = LocatorFactory.createLocator(this);
         locator.addListener(this);
     }
 

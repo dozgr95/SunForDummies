@@ -1,29 +1,16 @@
 package com.example.doz.sunfordummies.Business.Location;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-
-import java.security.ProviderException;
 
 public class AndroidLocator implements Locator {
     private LocationManager locationManager;
 
-    public AndroidLocator(final Context context) throws LocationPermissionException {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            throw new LocationPermissionException();
-        }
-
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            throw new ProviderException();
-        }
+    public AndroidLocator(final LocationManager locationManager)  {
+        this.locationManager = locationManager;
     }
 
     @Override
