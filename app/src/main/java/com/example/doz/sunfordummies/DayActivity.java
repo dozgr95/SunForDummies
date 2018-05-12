@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
-import com.example.doz.sunfordummies.Business.Location.AndroidLocator;
 import com.example.doz.sunfordummies.Business.Location.LocationDTO;
 import com.example.doz.sunfordummies.Business.Location.LocationObserver;
 import com.example.doz.sunfordummies.Business.Location.LocationPermissionException;
 import com.example.doz.sunfordummies.Business.Location.Locator;
 import com.example.doz.sunfordummies.Business.Location.LocatorFactory;
+import com.example.doz.sunfordummies.Data.DaySunInformation;
+import com.example.doz.sunfordummies.Data.InformationPersistenceManager;
+import com.example.doz.sunfordummies.Data.InformationPersistenceManagerFactory;
 
 import java.security.ProviderException;
 import java.util.Date;
@@ -21,12 +24,18 @@ import java.util.Date;
 public class DayActivity extends AppCompatActivity implements LocationObserver {
     private static final int LOCATION_PERMISSION_REQUEST = 24;
     private Locator locator;
+    private InformationPersistenceManager persistenceManager;
     private Date targetDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_activity);
+        try {
+            persistenceManager = InformationPersistenceManagerFactory.getPersistenceManager(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             registerLocationObserver();
@@ -67,6 +76,11 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
 
     @Override
     public void update(final LocationDTO location) {
+        DaySunInformation information = new DaySunInformation();
+        information.setLocation(new LocationDTO(location.getLatitude(), location.getLatitude()));
+        information.setDate(new Date());
+        persistenceManager.saveSunInformation(information);
+
         runOnUiThread(new Runnable() {
             public void run() {
                 Log.e("locator", "update received");
@@ -80,5 +94,12 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
     protected void onDestroy() {
         locator.removeListener(this);
         super.onDestroy();
+    }
+
+    public void onClickPrevious(View button) {
+        DaySunInformation information = persistenceManager.readSunInformation(new Date());
+        TextView dateCityTextView = findViewById(R.id.txtDateCity);
+        LocationDTO location = information.getLocation();
+        dateCityTextView.setText("Lat:" + location.getLatitude() + "Long:" + location.getLongitude());
     }
 }

@@ -5,6 +5,9 @@ public class LocationDTO {
     private double longitude;
     private double latitude;
 
+    public LocationDTO(){
+    }
+
     public LocationDTO(double latitude, double longitude){
         //set city also?
         this.latitude = latitude;
@@ -17,5 +20,13 @@ public class LocationDTO {
 
     public double getLatitude(){
         return latitude;
+    }
+
+    public void setLongitude(double longitude){
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(double latitude){
+        this.latitude = latitude;
     }
 }
