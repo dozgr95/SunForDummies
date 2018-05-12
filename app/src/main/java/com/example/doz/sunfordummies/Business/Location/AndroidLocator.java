@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 import java.security.ProviderException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AndroidLocator implements Locator {
     private LocationManager locationManager;
