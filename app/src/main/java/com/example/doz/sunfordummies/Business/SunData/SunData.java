@@ -1,6 +1,6 @@
 package com.example.doz.sunfordummies.Business.SunData;
 
-import com.example.doz.sunfordummies.Utils.LocationDTO;
+import com.example.doz.sunfordummies.Business.Location.LocationDTO;
 import com.example.doz.sunfordummies.Utils.SunDataDTO;
 
 import java.util.Date;

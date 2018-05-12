@@ -3,7 +3,7 @@ package com.example.doz.sunfordummies.Business.UvData;
 import android.app.Activity;
 import android.util.Log;
 
-import com.example.doz.sunfordummies.Utils.LocationDTO;
+import com.example.doz.sunfordummies.Business.Location.LocationDTO;
 
 import java.util.Date;
 

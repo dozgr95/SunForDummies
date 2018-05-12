@@ -1,32 +1,83 @@
 package com.example.doz.sunfordummies;
 
-import android.support.v7.app.AppCompatActivity;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.TextView;
 
-import com.example.doz.sunfordummies.Business.UvData.UvData;
-import com.example.doz.sunfordummies.Utils.LocationDTO;
+import com.example.doz.sunfordummies.Business.Location.AndroidLocator;
+import com.example.doz.sunfordummies.Business.Location.LocationDTO;
+import com.example.doz.sunfordummies.Business.Location.LocationObserver;
+import com.example.doz.sunfordummies.Business.Location.LocationPermissionException;
 import com.example.doz.sunfordummies.Business.Location.Locator;
 
+import java.security.ProviderException;
 import java.util.Date;
 
-public class DayActivity extends AppCompatActivity {
+public class DayActivity extends AppCompatActivity implements LocationObserver {
+    private static final int LOCATION_PERMISSION_REQUEST = 24;
+    private Locator locator;
     private Date targetDate;
-    private Locator locator = new Locator();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_activity);
 
+        try {
+            registerLocationObserver();
+        } catch (LocationPermissionException e) {
+            requestPermissions(new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, LOCATION_PERMISSION_REQUEST);
+        } catch (ProviderException e){
+            //inform user
+        }
+
         //get Date
         targetDate = new Date();
-        //get Location
-        LocationDTO currentLocation = locator.getLocation(this);
-
         //get Data from Modules
         //SunDataDTO sundata = new SunData().getSunData(this.targetDate, currentLocation);
-        new UvData().getUvData(this.targetDate, currentLocation, this);
+        //new UvData().getUvData(this.targetDate, currentLocation, this);
 
         // private setInfo() //static info text (disclaimer etc)
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case LOCATION_PERMISSION_REQUEST:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    try {
+                        registerLocationObserver();
+                    } catch (LocationPermissionException e) {
+                    }
+                }
+                break;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void registerLocationObserver() throws LocationPermissionException {
+        locator = new AndroidLocator(getApplicationContext());
+        locator.addListener(this);
+    }
+
+    @Override
+    public void update(final LocationDTO location) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.e("locator", "update received");
+                TextView dateCityTextView = findViewById(R.id.txtDateCity);
+                dateCityTextView.setText("Lat:" + location.getLatitude() + "Long:" + location.getLongitude());
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        locator.removeListener(this);
+        super.onDestroy();
     }
 }

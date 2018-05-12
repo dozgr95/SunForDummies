@@ -1,4 +1,4 @@
-package com.example.doz.sunfordummies.Utils;
+package com.example.doz.sunfordummies.Business.Location;
 
 public class LocationDTO {
     private String city;
