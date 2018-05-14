@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class SunDataPersistenceManagerJSON implements SunDataPersistenceManager {
@@ -36,7 +37,7 @@ public class SunDataPersistenceManagerJSON implements SunDataPersistenceManager 
     }
 
     @Override
-    public SunDataDTO findById(Date date, String city) {
+    public SunDataDTO findById(LocalDate date, String city) {
         File file = new File(fileDir, "app.json");
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String readLine;
@@ -52,8 +53,8 @@ public class SunDataPersistenceManagerJSON implements SunDataPersistenceManager 
         return new EmptySunDataDTO();
     }
 
-    private boolean checkIfIdMatches(String line, Date date, String city){
-        return line.contains(SunDataDTO.formatter.format(date)) &&
+    private boolean checkIfIdMatches(String line, LocalDate date, String city){
+        return line.contains(date.toString()) &&
                 line.contains(city);
     }
 }

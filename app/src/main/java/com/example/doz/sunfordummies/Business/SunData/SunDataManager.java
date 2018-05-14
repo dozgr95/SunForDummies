@@ -5,6 +5,7 @@ import com.example.doz.sunfordummies.Data.SunDataPersistenceManager;
 import com.example.doz.sunfordummies.Utils.EmptySunDataDTO;
 import com.example.doz.sunfordummies.Utils.SunDataDTO;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -15,7 +16,7 @@ public class SunDataManager {
         this.persistenceManager = persistenceManager;
     }
 
-    public SunDataDTO getSunData(Date date, LocationDTO location){
+    public SunDataDTO getSunData(LocalDate date, LocationDTO location){
         SunDataDTO data = persistenceManager.findById(date, location.getCity());
 
         if(data instanceof EmptySunDataDTO){

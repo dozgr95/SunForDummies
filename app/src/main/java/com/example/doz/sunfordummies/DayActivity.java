@@ -19,6 +19,10 @@ import com.example.doz.sunfordummies.Business.SunData.SunDataManagerFactory;
 import com.example.doz.sunfordummies.Utils.SunDataDTO;
 
 import java.security.ProviderException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -74,7 +78,7 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
 
     @Override
     public void update(final LocationDTO location) {
-        Date chooseDate = new Date();
+        LocalDate chooseDate = LocalDate.now();
         if(currentSunData != null) {
             chooseDate = currentSunData.getDate();
         }
@@ -88,11 +92,8 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         });
     }
 
-    private Date getDayBefore(Date date){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, -1);
-        return calendar.getTime();
+    private LocalDate getDayBefore(LocalDate date){
+        return date.minusDays(1);
     }
 
     @Override
@@ -102,7 +103,7 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
     }
 
     public void onClickPrevious(View button) {
-        Date currentDate = currentSunData.getDate();
+        LocalDate currentDate = currentSunData.getDate();
         currentSunData = sunDataManager.getSunData(getDayBefore(currentDate), currentLocation);
         updateSunDataOnGUI();
     }
@@ -118,7 +119,8 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         TextView txtVitamin = findViewById(R.id.txtVitamin);
         TextView txtEnergy = findViewById(R.id.txtEnergy);
 
-        txtDateCity.setText(currentSunData.getDateString() + "  " + currentSunData.getCity());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        txtDateCity.setText(currentSunData.getDate().format(formatter) + "  " + currentSunData.getCity());
         txtMaxPosition.setText(String.valueOf(currentSunData.getMaxPosition()));
         txtSunburn.setText(currentSunData.getSunburn());
         txtSunrise.setText(currentSunData.getSunrise().toString());

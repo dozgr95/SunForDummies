@@ -6,15 +6,14 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
 
 public class SunDataDTO {
-    public static DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-
     private String city;
-    private Date date;
+    private LocalDate date;
     private int uv;
     private int maxPosition;
     private LocalTime sunrise;
@@ -27,15 +26,11 @@ public class SunDataDTO {
     public SunDataDTO(){
     }
 
-    public Date getDate() {
-        return new Date(date.getTime()) ;
+    public LocalDate getDate() {
+        return LocalDate.parse(date.toString()) ;
     }
 
-    public String getDateString() {
-        return formatter.format(getDate());
-    }
-
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -115,7 +110,7 @@ public class SunDataDTO {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("city", getCity());
-            jsonObject.put("day", getDateString());
+            jsonObject.put("day", getDate());
             jsonObject.put("uv", getUv());
             jsonObject.put("maxPosition", getMaxPosition());
             jsonObject.put("sunburn", getSunburn());
@@ -137,7 +132,7 @@ public class SunDataDTO {
             JSONObject jsonObject = new JSONObject(jsonString);
 
             sunDataDTO.setCity(jsonObject.getString("city"));
-            sunDataDTO.setDate(formatter.parse(jsonObject.getString("day")));
+            sunDataDTO.setDate(LocalDate.parse(jsonObject.getString("day")));
             sunDataDTO.setUv(jsonObject.getInt("uv"));
             sunDataDTO.setMaxPosition(jsonObject.getInt("maxPosition"));
             sunDataDTO.setSunburn(jsonObject.getString("sunburn"));
@@ -147,8 +142,6 @@ public class SunDataDTO {
             sunDataDTO.setVitamin(jsonObject.getString("vitamin"));
             sunDataDTO.setEnergy(jsonObject.getDouble("energy"));
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
             e.printStackTrace();
         }
 
