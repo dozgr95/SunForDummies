@@ -1,14 +1,11 @@
 package com.example.doz.sunfordummies.Business.SunData;
 
-import android.widget.TextView;
-
 import com.example.doz.sunfordummies.Business.Location.LocationDTO;
 import com.example.doz.sunfordummies.Data.SunDataPersistenceManager;
-import com.example.doz.sunfordummies.R;
 import com.example.doz.sunfordummies.Utils.EmptySunDataDTO;
 import com.example.doz.sunfordummies.Utils.SunDataDTO;
 
-import java.util.Calendar;
+import java.time.LocalTime;
 import java.util.Date;
 
 public class SunDataManager {
@@ -19,12 +16,20 @@ public class SunDataManager {
     }
 
     public SunDataDTO getSunData(Date date, LocationDTO location){
-        SunDataDTO data = persistenceManager.findById(date, location);
+        SunDataDTO data = persistenceManager.findById(date, location.getCity());
 
         if(data instanceof EmptySunDataDTO){
             data = new SunDataDTO();
             data.setDate(date);
-            data.setLocation(location);
+            data.setCity(location.getCity());
+            data.setSunrise(LocalTime.now());
+            data.setSunset(LocalTime.now());
+            data.setMaxPosition(35);
+            data.setAbove(5);
+            data.setEnergy(8.9);
+            data.setSunburn("medium");
+            data.setUv(2);
+            data.setVitamin("medium");
             //API call
             persistenceManager.saveSunInformation(data);
         }

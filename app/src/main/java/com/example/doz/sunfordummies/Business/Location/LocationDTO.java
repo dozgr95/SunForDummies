@@ -29,4 +29,12 @@ public class LocationDTO {
     public void setLatitude(double latitude){
         this.latitude = latitude;
     }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 }

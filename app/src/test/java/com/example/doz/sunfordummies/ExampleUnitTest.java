@@ -2,6 +2,8 @@ package com.example.doz.sunfordummies;
 
 import org.junit.Test;
 
+import java.time.LocalTime;
+
 import static org.junit.Assert.*;
 
 /**
@@ -12,6 +14,7 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+        LocalTime time = LocalTime.now();
+        time.toString();
     }
 }

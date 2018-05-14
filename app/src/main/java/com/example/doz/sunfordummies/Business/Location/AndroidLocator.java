@@ -1,19 +1,24 @@
 package com.example.doz.sunfordummies.Business.Location;
 
 import android.annotation.SuppressLint;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 public class AndroidLocator implements Locator {
     private LocationManager locationManager;
+    private Geocoder geocoder;
 
-    public AndroidLocator(final LocationManager locationManager)  {
+    public AndroidLocator(final LocationManager locationManager, Geocoder geocoder)  {
         this.locationManager = locationManager;
+        this.geocoder = geocoder;
     }
 
     @Override
@@ -39,6 +44,12 @@ public class AndroidLocator implements Locator {
         @Override
         public void onLocationChanged(Location location) {
             LocationDTO dto = new LocationDTO(location.getLatitude(), location.getLongitude());
+            try {
+                List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                dto.setCity(addresses.get(0).getLocality());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             observer.update(dto);
         }
 

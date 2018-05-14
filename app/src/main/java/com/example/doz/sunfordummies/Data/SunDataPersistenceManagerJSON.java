@@ -36,13 +36,13 @@ public class SunDataPersistenceManagerJSON implements SunDataPersistenceManager 
     }
 
     @Override
-    public SunDataDTO findById(Date date, LocationDTO location) {
+    public SunDataDTO findById(Date date, String city) {
         File file = new File(fileDir, "app.json");
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String readLine;
 
             while((readLine = reader.readLine()) != null) {
-                if(checkIfIdMatches(readLine, date, location))
+                if(checkIfIdMatches(readLine, date, city))
                     return SunDataDTO.readJSON(readLine);
             }
         } catch (final IOException e){
@@ -52,9 +52,8 @@ public class SunDataPersistenceManagerJSON implements SunDataPersistenceManager 
         return new EmptySunDataDTO();
     }
 
-    private boolean checkIfIdMatches(String line, Date date, LocationDTO locationDTO){
+    private boolean checkIfIdMatches(String line, Date date, String city){
         return line.contains(SunDataDTO.formatter.format(date)) &&
-                line.contains(String.valueOf(locationDTO.getLatitude())) &&
-                line.contains(String.valueOf(locationDTO.getLongitude()));
+                line.contains(city);
     }
 }

@@ -3,10 +3,12 @@ package com.example.doz.sunfordummies.Business.Location;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 
 import java.security.ProviderException;
+import java.util.Locale;
 
 public class LocatorFactory {
     public static Locator createLocator(Context context) throws LocationPermissionException, ProviderException{
@@ -19,6 +21,7 @@ public class LocatorFactory {
             throw new ProviderException();
         }
 
-        return new AndroidLocator(locationManager);
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        return new AndroidLocator(locationManager, geocoder);
     }
 }

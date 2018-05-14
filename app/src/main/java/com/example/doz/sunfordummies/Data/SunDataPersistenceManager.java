@@ -6,5 +6,5 @@ import com.example.doz.sunfordummies.Business.Location.LocationDTO;
 
 public interface SunDataPersistenceManager {
     void saveSunInformation(SunDataDTO sunDataDTO);
-    SunDataDTO findById(Date day, LocationDTO location);
+    SunDataDTO findById(Date day, String city);
 }

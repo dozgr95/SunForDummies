@@ -2,9 +2,6 @@ package com.example.doz.sunfordummies;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -21,17 +18,15 @@ import com.example.doz.sunfordummies.Business.SunData.SunDataManager;
 import com.example.doz.sunfordummies.Business.SunData.SunDataManagerFactory;
 import com.example.doz.sunfordummies.Utils.SunDataDTO;
 
-import java.io.IOException;
 import java.security.ProviderException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class DayActivity extends AppCompatActivity implements LocationObserver {
     private static final int LOCATION_PERMISSION_REQUEST = 24;
     private Locator locator;
     private SunDataManager sunDataManager;
+    private LocationDTO currentLocation;
     private SunDataDTO currentSunData;
 
     @Override
@@ -40,8 +35,6 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         setContentView(R.layout.day_activity);
 
         sunDataManager = SunDataManagerFactory.getSunDataManager(this);
-        currentSunData = new SunDataDTO();
-        currentSunData.setDate(new Date());
 
         try {
             registerLocationObserver();
@@ -81,8 +74,12 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
 
     @Override
     public void update(final LocationDTO location) {
-        Date currentDate = currentSunData.getDate();
-        currentSunData = sunDataManager.getSunData(currentDate, location);
+        Date chooseDate = new Date();
+        if(currentSunData != null) {
+            chooseDate = currentSunData.getDate();
+        }
+        currentLocation = location;
+        currentSunData = sunDataManager.getSunData(chooseDate, location);
 
         runOnUiThread(new Runnable() {
             public void run() {
@@ -106,9 +103,7 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
 
     public void onClickPrevious(View button) {
         Date currentDate = currentSunData.getDate();
-        LocationDTO locationDTO = currentSunData.getLocation();
-
-        currentSunData = sunDataManager.getSunData(getDayBefore(currentDate), locationDTO);
+        currentSunData = sunDataManager.getSunData(getDayBefore(currentDate), currentLocation);
         updateSunDataOnGUI();
     }
 
@@ -119,12 +114,18 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         TextView txtSunrise = findViewById(R.id.txtSunrise);
         TextView txtSunset = findViewById(R.id.txtSunset);
         TextView txtUV = findViewById(R.id.txtUV);
+        TextView txtAbove35 = findViewById(R.id.txtAbove);
         TextView txtVitamin = findViewById(R.id.txtVitamin);
         TextView txtEnergy = findViewById(R.id.txtEnergy);
 
-        LocationDTO locationDTO = currentSunData.getLocation();
-
-        //txtMaxPosition.setText(sunDataDTO.ge);
-        txtUV.setText(currentSunData.getUv());
+        txtDateCity.setText(currentSunData.getDateString() + "  " + currentSunData.getCity());
+        txtMaxPosition.setText(String.valueOf(currentSunData.getMaxPosition()));
+        txtSunburn.setText(currentSunData.getSunburn());
+        txtSunrise.setText(currentSunData.getSunrise().toString());
+        txtSunset.setText(currentSunData.getSunset().toString());
+        txtAbove35.setText(String.valueOf(currentSunData.getAbove()));
+        txtVitamin.setText(currentSunData.getVitamin());
+        txtEnergy.setText(String.valueOf(currentSunData.getEnergy()));
+        txtUV.setText(String.valueOf(currentSunData.getUv()));
     }
 }
