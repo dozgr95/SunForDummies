@@ -1,10 +1,13 @@
 package com.example.doz.sunfordummies.Business.Location;
 
 import android.annotation.SuppressLint;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+
+import java.util.Locale;
 
 public class AndroidLocator implements Locator {
     private LocationManager locationManager;
@@ -16,7 +19,9 @@ public class AndroidLocator implements Locator {
     @Override
     @SuppressLint("MissingPermission")
     public void addListener(LocationObserver observer) {
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListenerAdapter(observer));
+        LocationListenerAdapter locationListener = new LocationListenerAdapter(observer);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 0, locationListener);
+        locationListener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
     }
 
     @Override

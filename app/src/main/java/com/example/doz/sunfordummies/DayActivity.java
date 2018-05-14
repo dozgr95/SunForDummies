@@ -2,6 +2,9 @@ package com.example.doz.sunfordummies;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,28 +17,31 @@ import com.example.doz.sunfordummies.Business.Location.LocationObserver;
 import com.example.doz.sunfordummies.Business.Location.LocationPermissionException;
 import com.example.doz.sunfordummies.Business.Location.Locator;
 import com.example.doz.sunfordummies.Business.Location.LocatorFactory;
-import com.example.doz.sunfordummies.Data.DaySunInformation;
-import com.example.doz.sunfordummies.Data.InformationPersistenceManager;
-import com.example.doz.sunfordummies.Data.InformationPersistenceManagerFactory;
+import com.example.doz.sunfordummies.Business.SunData.SunDataManager;
+import com.example.doz.sunfordummies.Business.SunData.SunDataManagerFactory;
+import com.example.doz.sunfordummies.Utils.SunDataDTO;
 
+import java.io.IOException;
 import java.security.ProviderException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class DayActivity extends AppCompatActivity implements LocationObserver {
     private static final int LOCATION_PERMISSION_REQUEST = 24;
     private Locator locator;
-    private InformationPersistenceManager persistenceManager;
-    private Date targetDate;
+    private SunDataManager sunDataManager;
+    private SunDataDTO currentSunData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_activity);
-        try {
-            persistenceManager = InformationPersistenceManagerFactory.getPersistenceManager(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        sunDataManager = SunDataManagerFactory.getSunDataManager(this);
+        currentSunData = new SunDataDTO();
+        currentSunData.setDate(new Date());
 
         try {
             registerLocationObserver();
@@ -45,10 +51,8 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
             //inform user
         }
 
-        //get Date
-        targetDate = new Date();
         //get Data from Modules
-        //SunDataDTO sundata = new SunData().getSunData(this.targetDate, currentLocation);
+        //SunDataDTO sundata = new SunDataManager().getSunData(this.targetDate, currentLocation);
         //new UvData().getUvData(this.targetDate, currentLocation, this);
 
         // private setInfo() //static info text (disclaimer etc)
@@ -62,6 +66,7 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
                     try {
                         registerLocationObserver();
                     } catch (LocationPermissionException e) {
+                        Log.e("sunfordummies", "Permission not received.");
                     }
                 }
                 break;
@@ -76,18 +81,21 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
 
     @Override
     public void update(final LocationDTO location) {
-        DaySunInformation information = new DaySunInformation();
-        information.setLocation(new LocationDTO(location.getLatitude(), location.getLatitude()));
-        information.setDate(new Date());
-        persistenceManager.saveSunInformation(information);
+        Date currentDate = currentSunData.getDate();
+        currentSunData = sunDataManager.getSunData(currentDate, location);
 
         runOnUiThread(new Runnable() {
             public void run() {
-                Log.e("locator", "update received");
-                TextView dateCityTextView = findViewById(R.id.txtDateCity);
-                dateCityTextView.setText("Lat:" + location.getLatitude() + "Long:" + location.getLongitude());
+                updateSunDataOnGUI();
             }
         });
+    }
+
+    private Date getDayBefore(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, -1);
+        return calendar.getTime();
     }
 
     @Override
@@ -97,9 +105,26 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
     }
 
     public void onClickPrevious(View button) {
-        DaySunInformation information = persistenceManager.readSunInformation(new Date());
-        TextView dateCityTextView = findViewById(R.id.txtDateCity);
-        LocationDTO location = information.getLocation();
-        dateCityTextView.setText("Lat:" + location.getLatitude() + "Long:" + location.getLongitude());
+        Date currentDate = currentSunData.getDate();
+        LocationDTO locationDTO = currentSunData.getLocation();
+
+        currentSunData = sunDataManager.getSunData(getDayBefore(currentDate), locationDTO);
+        updateSunDataOnGUI();
+    }
+
+    private void updateSunDataOnGUI(){
+        TextView txtDateCity = findViewById(R.id.txtDateCity);
+        TextView txtMaxPosition = findViewById(R.id.txtMaxPosition);
+        TextView txtSunburn = findViewById(R.id.txtSunburn);
+        TextView txtSunrise = findViewById(R.id.txtSunrise);
+        TextView txtSunset = findViewById(R.id.txtSunset);
+        TextView txtUV = findViewById(R.id.txtUV);
+        TextView txtVitamin = findViewById(R.id.txtVitamin);
+        TextView txtEnergy = findViewById(R.id.txtEnergy);
+
+        LocationDTO locationDTO = currentSunData.getLocation();
+
+        //txtMaxPosition.setText(sunDataDTO.ge);
+        txtUV.setText(currentSunData.getUv());
     }
 }
