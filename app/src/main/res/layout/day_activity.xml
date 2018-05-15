@@ -5,7 +5,7 @@
     android:id="@+id/sunForDummies"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.doz.sunfordummies.DayActivity">
+    tools:context="ch.hslu.mobpro.sunfordummies.DayActivity">
 
     <TextView
         android:id="@+id/txtAppTitle"
