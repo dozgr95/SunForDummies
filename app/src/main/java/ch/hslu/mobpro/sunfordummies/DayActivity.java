@@ -21,6 +21,7 @@ import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
 
 import java.security.ProviderException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -145,15 +146,24 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         TextView txtVitamin = findViewById(R.id.txtVitamin);
         TextView txtEnergy = findViewById(R.id.txtEnergy);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        txtDateCity.setText(currentSunData.getDate().format(formatter) + "  " + currentSunData.getCity());
+        txtDateCity.setText(getDateString(currentSunData.getDate()) + "  " + currentSunData.getCity());
         txtMaxPosition.setText(String.valueOf(currentSunData.getMaxPosition()));
         txtSunburn.setText(currentSunData.getSunburn());
-        txtSunrise.setText(currentSunData.getSunrise().toString());
-        txtSunset.setText(currentSunData.getSunset().toString());
+        txtSunrise.setText(getTimeString(currentSunData.getSunrise()));
+        txtSunset.setText(getTimeString(currentSunData.getSunset()));
         txtAbove35.setText(String.valueOf(currentSunData.getAbove()));
         txtVitamin.setText(currentSunData.getVitamin());
         txtEnergy.setText(String.valueOf(currentSunData.getEnergy()));
         txtUV.setText(String.valueOf(currentSunData.getUv()));
+    }
+
+    private String getDateString(LocalDate date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        return date.format(formatter);
+    }
+
+    private String getTimeString(LocalTime time){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return time.format(formatter);
     }
 }
