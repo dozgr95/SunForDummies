@@ -1,6 +1,8 @@
 package ch.hslu.mobpro.sunfordummies.Business.Location;
 
-public class LocationDTO {
+import java.io.Serializable;
+
+public class LocationDTO implements Serializable {
     private String city;
     private double longitude;
     private double latitude;

@@ -15,20 +15,16 @@ import ch.hslu.mobpro.sunfordummies.Business.Location.LocationObserver;
 import ch.hslu.mobpro.sunfordummies.Business.Location.LocationPermissionException;
 import ch.hslu.mobpro.sunfordummies.Business.Location.Locator;
 import ch.hslu.mobpro.sunfordummies.Business.Location.LocatorFactory;
-import ch.hslu.mobpro.sunfordummies.Business.SunData.SunDataManager;
-import ch.hslu.mobpro.sunfordummies.Business.SunData.SunDataManagerFactory;
 import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
 
 import java.security.ProviderException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class DayActivity extends AppCompatActivity implements LocationObserver {
     private static final int LOCATION_PERMISSION_REQUEST = 24;
     private Locator locator;
-    private SunDataManager sunDataManager;
     private LocationDTO currentLocation;
     private SunDataDTO currentSunData;
     private LocalDate currentDate;
@@ -37,8 +33,6 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_activity);
-
-        sunDataManager = SunDataManagerFactory.getSunDataManager(this);
 
         try {
             registerLocationObserver();
@@ -50,8 +44,6 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
 
         // test
         currentDate = LocalDate.now();
-        sunDataManager.getSunData(currentDate, currentLocation);
-
     }
 
     @Override
@@ -82,7 +74,6 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
             chooseDate = currentSunData.getDate();
         }
         currentLocation = location;
-        currentSunData = sunDataManager.getSunData(chooseDate, location);
 
         runOnUiThread(new Runnable() {
             public void run() {
@@ -103,7 +94,6 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
 
     public void onClickPrevious(View button) {
         LocalDate currentDate = currentSunData.getDate();
-        currentSunData = sunDataManager.getSunData(getDayBefore(currentDate), currentLocation);
         updateSunDataOnGUI();
     }
 

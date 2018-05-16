@@ -3,8 +3,6 @@ package ch.hslu.mobpro.sunfordummies.Business.Api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -13,14 +11,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class UvDataAPI extends AsyncTask<String, String, String> {
+import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
+
+public class UvDataAPI extends AsyncTask<String, String, Double> {
     private SunDataDTO sunDataDTO;
+
     public UvDataAPI(SunDataDTO sunDataDTO){
         this.sunDataDTO = sunDataDTO;
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected Double doInBackground(String... strings) {
         URL request;
         String uvValue = "";
         try {
@@ -29,8 +30,6 @@ public class UvDataAPI extends AsyncTask<String, String, String> {
             httpConnection.connect();
             if(httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
                 InputStream stream = httpConnection.getInputStream();
-                StringBuilder text= new StringBuilder();
-                String line;
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 String json = reader.readLine();
                 JSONObject jsonobject = new JSONObject(json);
@@ -39,23 +38,22 @@ public class UvDataAPI extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return uvValue;
+        return Double.valueOf(uvValue);
     }
 
-    protected void onPostExecute(String uvValue) {
+    protected void onPostExecute(Double uvValue) {
         try{
-            double uv = Double.valueOf(uvValue);
-            sunDataDTO.setUv(uv);
-            if(uv < 3){
+            sunDataDTO.setUv(uvValue);
+            if(uvValue < 3){
                 sunDataDTO.setSunburn("low");
                 sunDataDTO.setVitamin("low");
-            } else if(uv > 3  && uv < 6){
+            } else if(uvValue > 3  && uvValue < 6){
                 sunDataDTO.setSunburn("medium");
                 sunDataDTO.setVitamin("medium");
-            } else if (uv > 6 && uv < 9) {
+            } else if (uvValue > 6 && uvValue < 9) {
                 sunDataDTO.setSunburn("high");
                 sunDataDTO.setVitamin("high");
-            } else if (uv > 10) {
+            } else if (uvValue > 10) {
                 sunDataDTO.setSunburn("very high");
                 sunDataDTO.setVitamin("very high");
             } else {

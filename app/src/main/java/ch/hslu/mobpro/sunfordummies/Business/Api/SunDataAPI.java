@@ -29,8 +29,6 @@ public class SunDataAPI extends AsyncTask<String, String, String> {
             httpConnection.connect();
             if(httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
                 InputStream stream = httpConnection.getInputStream();
-                StringBuilder text= new StringBuilder();
-                String line;
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 String json = reader.readLine();
                 JSONObject jsonobject = new JSONObject(json);
