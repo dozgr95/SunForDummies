@@ -222,6 +222,7 @@
         android:layout_height="35dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
+        android:onClick="showInfoVitamin"
         android:text="@string/info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoSunBurn" />
@@ -232,6 +233,7 @@
         android:layout_height="35dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
+        android:onClick="showInfoSunburn"
         android:text="@string/info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoUV" />
@@ -242,6 +244,7 @@
         android:layout_height="35dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
+        android:onClick="showInfoUv"
         android:text="@string/info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoAbove" />
@@ -252,6 +255,7 @@
         android:layout_height="35dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
+        android:onClick="showInfoEnergy"
         android:text="@string/info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoVitamin" />
@@ -262,6 +266,7 @@
         android:layout_height="35dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="168dp"
+        android:onClick="showInfoAbove"
         android:text="@string/info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnTomorrow" />

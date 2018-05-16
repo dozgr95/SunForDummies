@@ -1,4 +1,4 @@
-package ch.hslu.mobpro.sunfordummies.Business.UvData;
+package ch.hslu.mobpro.sunfordummies.Business.Api;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -45,15 +45,25 @@ public class UvDataAPI extends AsyncTask<String, String, String> {
     protected void onPostExecute(String uvValue) {
         try{
             double uv = Double.valueOf(uvValue);
-            // set view element sunburn potential
-            //  uv < 3 means  low
-            //  uv > 3  && uv < 6  means medium
-            //  uv > 6 && uv < 9 means high
-            // uv > 10 means very high
             sunDataDTO.setUv(uv);
+            if(uv < 3){
+                sunDataDTO.setSunburn("low");
+                sunDataDTO.setVitamin("low");
+            } else if(uv > 3  && uv < 6){
+                sunDataDTO.setSunburn("medium");
+                sunDataDTO.setVitamin("medium");
+            } else if (uv > 6 && uv < 9) {
+                sunDataDTO.setSunburn("high");
+                sunDataDTO.setVitamin("high");
+            } else if (uv > 10) {
+                sunDataDTO.setSunburn("very high");
+                sunDataDTO.setVitamin("very high");
+            } else {
+                sunDataDTO.setSunburn("not Available");
+                sunDataDTO.setVitamin("not Available");
+            }
         } catch (Exception e){
             Log.i("DummyData", "uv could not be read");
         }
-
     }
 }

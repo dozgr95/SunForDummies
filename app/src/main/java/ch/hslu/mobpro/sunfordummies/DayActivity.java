@@ -4,12 +4,11 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
-import com.example.doz.sunfordummies.R;
 
 import ch.hslu.mobpro.sunfordummies.Business.Location.LocationDTO;
 import ch.hslu.mobpro.sunfordummies.Business.Location.LocationObserver;
@@ -23,6 +22,7 @@ import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
 import java.security.ProviderException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class DayActivity extends AppCompatActivity implements LocationObserver {
     private static final int LOCATION_PERMISSION_REQUEST = 24;
@@ -30,6 +30,7 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
     private SunDataManager sunDataManager;
     private LocationDTO currentLocation;
     private SunDataDTO currentSunData;
+    private LocalDate currentDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +47,10 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
             //inform user
         }
 
-        //get Data from Modules
-        //SunDataDTO sundata = new SunDataManager().getSunData(this.targetDate, currentLocation);
-        //new UvData().getUvData(this.targetDate, currentLocation, this);
+        // test
+        currentDate = LocalDate.now();
+        sunDataManager.getSunData(currentDate, currentLocation);
 
-        // private setInfo() //static info text (disclaimer etc)
     }
 
     @Override
@@ -104,6 +104,34 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         LocalDate currentDate = currentSunData.getDate();
         currentSunData = sunDataManager.getSunData(getDayBefore(currentDate), currentLocation);
         updateSunDataOnGUI();
+    }
+
+    public void showInfoVitamin(View button){
+        this.showMessage(getResources().getString(R.string.infoVitamin), getResources().getString(R.string.vitamin));
+    }
+
+    public void showInfoAbove(View button){
+        this.showMessage(getResources().getString(R.string.infoAbove), getResources().getString(R.string.above));
+    }
+
+    public void showInfoUv(View button){
+        this.showMessage(getResources().getString(R.string.infoUv), getResources().getString(R.string.uv));
+    }
+
+    public void showInfoSunburn(View button){
+        this.showMessage(getResources().getString(R.string.infoSunburn), getResources().getString(R.string.sunburn));
+    }
+
+    public void showInfoEnergy(View button){
+        this.showMessage(getResources().getString(R.string.infoEnergy), getResources().getString(R.string.energy));
+    }
+
+    private void showMessage(String message, String title){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage(message);
+        dialog.setTitle(title);
+        dialog.setCancelable(true);
+        dialog.create().show();
     }
 
     private void updateSunDataOnGUI(){

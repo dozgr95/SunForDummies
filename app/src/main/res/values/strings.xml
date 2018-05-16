@@ -12,4 +12,9 @@
     <string name="info"> i</string>
     <string name="yesterday">&lt;</string>
     <string name="tomorrow">&gt;</string>
+    <string name="infoVitamin">The sun is one of the rare sources for vitamin D3, which is essential for health. It is produced by the body if sunlight reaches skin. </string>
+    <string name="infoSunburn">The sunlight can lead to sunburn on the skin, which is prevented when using suncream. Furthermore the sun can damage human eyes, when no sunglasses are used. </string>
+    <string name="infoUv">The UV-Radiation is part of the sunlight. The Uv-Index has range from 0 (very low) to 11 (too high). </string>
+    <string name="infoEnergy">Under some circumstances pv-panels may produce a conciderable amount of solar energy. 1 kwh equals 77 full charges of a smartphohne. </string>
+    <string name="infoAbove">While the sun is above 35° it shins more effective. There will be direct radiation towards skin, pv-panels etc.  </string>
 </resources>
