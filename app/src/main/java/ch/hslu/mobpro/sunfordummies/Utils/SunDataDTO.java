@@ -3,11 +3,12 @@ package ch.hslu.mobpro.sunfordummies.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 
-public class SunDataDTO {
+public class SunDataDTO implements Serializable {
     private String city;
     private LocalDate date;
     private double uv;

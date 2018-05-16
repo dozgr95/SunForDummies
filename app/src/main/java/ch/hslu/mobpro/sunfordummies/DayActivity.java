@@ -10,29 +10,32 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import ch.hslu.mobpro.sunfordummies.Business.Location.LocationDTO;
-import ch.hslu.mobpro.sunfordummies.Business.Location.LocationObserver;
-import ch.hslu.mobpro.sunfordummies.Business.Location.LocationPermissionException;
-import ch.hslu.mobpro.sunfordummies.Business.Location.Locator;
-import ch.hslu.mobpro.sunfordummies.Business.Location.LocatorFactory;
-import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
-
 import java.security.ProviderException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class DayActivity extends AppCompatActivity implements LocationObserver {
+import ch.hslu.mobpro.sunfordummies.Business.Location.LocationDTO;
+import ch.hslu.mobpro.sunfordummies.Business.Location.LocationObserver;
+import ch.hslu.mobpro.sunfordummies.Business.Location.LocationPermissionException;
+import ch.hslu.mobpro.sunfordummies.Business.Location.Locator;
+import ch.hslu.mobpro.sunfordummies.Business.Location.LocatorFactory;
+import ch.hslu.mobpro.sunfordummies.Business.SunData.ResultReceiverCallBack;
+import ch.hslu.mobpro.sunfordummies.Business.SunData.SunDataResultReceiver;
+import ch.hslu.mobpro.sunfordummies.Business.SunData.SunDataService;
+import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
+
+public class DayActivity extends AppCompatActivity implements LocationObserver, ResultReceiverCallBack<SunDataDTO> {
     private static final int LOCATION_PERMISSION_REQUEST = 24;
     private Locator locator;
     private LocationDTO currentLocation;
-    private SunDataDTO currentSunData;
-    private LocalDate currentDate;
+    private SunDataDTO currentSunData = new SunDataDTO();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_activity);
+        currentSunData.setDate(LocalDate.now());
 
         try {
             registerLocationObserver();
@@ -41,9 +44,6 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         } catch (ProviderException e){
             //inform user
         }
-
-        // test
-        currentDate = LocalDate.now();
     }
 
     @Override
@@ -75,15 +75,8 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         }
         currentLocation = location;
 
-        runOnUiThread(new Runnable() {
-            public void run() {
-                updateSunDataOnGUI();
-            }
-        });
-    }
-
-    private LocalDate getDayBefore(LocalDate date){
-        return date.minusDays(1);
+        SunDataService.retrieveSunData(this, currentLocation, chooseDate,
+                new SunDataResultReceiver(this));
     }
 
     @Override
@@ -93,8 +86,9 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
     }
 
     public void onClickPrevious(View button) {
-        LocalDate currentDate = currentSunData.getDate();
-        updateSunDataOnGUI();
+        LocalDate date = currentSunData.getDate().minusDays(1);
+        SunDataService.retrieveSunData(this, currentLocation, date,
+                new SunDataResultReceiver(this));
     }
 
     public void showInfoVitamin(View button){
@@ -125,6 +119,17 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         dialog.create().show();
     }
 
+    @Override
+    public void onSuccess(SunDataDTO data) {
+        currentSunData = data;
+        updateSunDataOnGUI();
+    }
+
+    @Override
+    public void onError(Exception exception) {
+
+    }
+
     private void updateSunDataOnGUI(){
         TextView txtDateCity = findViewById(R.id.txtDateCity);
         TextView txtMaxPosition = findViewById(R.id.txtMaxPosition);
@@ -139,8 +144,8 @@ public class DayActivity extends AppCompatActivity implements LocationObserver {
         txtDateCity.setText(getDateString(currentSunData.getDate()) + "  " + currentSunData.getCity());
         txtMaxPosition.setText(String.valueOf(currentSunData.getMaxPosition()));
         txtSunburn.setText(currentSunData.getSunburn());
-        txtSunrise.setText(getTimeString(currentSunData.getSunrise()));
-        txtSunset.setText(getTimeString(currentSunData.getSunset()));
+        //txtSunrise.setText(getTimeString(currentSunData.getSunrise()));
+        //txtSunset.setText(getTimeString(currentSunData.getSunset()));
         txtAbove35.setText(String.valueOf(currentSunData.getAbove()));
         txtVitamin.setText(currentSunData.getVitamin());
         txtEnergy.setText(String.valueOf(currentSunData.getEnergy()));
