@@ -3,6 +3,7 @@ package ch.hslu.mobpro.sunfordummies.Business.Api;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -10,19 +11,27 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
 
-public class SunDataAPI extends AsyncTask<String, String, String> {
+public class SunDataAPI extends AsyncTask<String, String, JSONObject> {
     private SunDataDTO sunDataDTO;
     public SunDataAPI(SunDataDTO sunDataDTO){
         this.sunDataDTO = sunDataDTO;
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected JSONObject doInBackground(String... strings) {
         URL request;
-        String uvValue = "";
+        JSONObject jsonobject = null;
         try {
             request = new URL(strings[0]);
             HttpURLConnection httpConnection = (HttpURLConnection) request.openConnection();
@@ -31,21 +40,30 @@ public class SunDataAPI extends AsyncTask<String, String, String> {
                 InputStream stream = httpConnection.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 String json = reader.readLine();
-                JSONObject jsonobject = new JSONObject(json);
-                uvValue = jsonobject.optString("value");
+                jsonobject = new JSONObject(json);
             }
+            return jsonobject;
         } catch (Exception e) {
             e.printStackTrace();
+            return jsonobject;
         }
-        return uvValue;
     }
 
-    protected void onPostExecute(String uvValue) {
+    protected void onPostExecute(JSONObject values) {
         try{
             //set sunDataDTO
+            JSONObject sys = values.getJSONObject("sys");
+            long sunriseStamp = Long.valueOf(sys.optString("sunrise"))*1000;
+            long sunsetStamp = Long.valueOf(sys.optString("sunset"))*1000;
+            TimeZone timeZone = TimeZone.getTimeZone("Europe/Zurich");
+            Date sunriseDate = new java.util.Date(sunriseStamp + timeZone.getOffset(sunriseStamp));
+            Date sunsetDate = new java.util.Date(sunsetStamp  + timeZone.getOffset(sunsetStamp));
+            Format formatter = new SimpleDateFormat("HH:mm");
+            sunDataDTO.setSunrise(LocalTime.parse(formatter.format(sunriseDate)));
+            sunDataDTO.setSunset(LocalTime.parse(formatter.format(sunsetDate)));
 
         } catch (Exception e){
-            Log.i("DummyData", "uv could not be read");
+            Log.i("DummyData", "sun data is not correctly read");
         }
     }
 }

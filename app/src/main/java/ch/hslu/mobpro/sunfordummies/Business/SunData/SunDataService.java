@@ -32,7 +32,7 @@ public class SunDataService extends IntentService {
     private static final String EXTRA_LOCATION = "ch.hslu.mobpro.sunfordummies.Business.SunData.extra.LOCATION";
     private static final String EXTRA_DATE = "ch.hslu.mobpro.sunfordummies.Business.SunData.extra.DATE";
 
-    private static final String uvKEY = "68e0ca9dbc72500e3c5d8ea0c24d6306";
+    private static final String subKEY = "68e0ca9dbc72500e3c5d8ea0c24d6306";
 
     public SunDataService() {
         super("SunDataService");
@@ -72,7 +72,8 @@ public class SunDataService extends IntentService {
         SunDataPersistenceManager persistenceManager = SunDataPersistenceManagerFactory.getPersistenceManager(this);
         SunDataDTO sunData = persistenceManager.findById(date, location.getCity());
 
-        if(sunData instanceof EmptySunDataDTO){
+        // if... not needed for testing
+        //if(sunData instanceof EmptySunDataDTO){
             sunData = new SunDataDTO();
             sunData.setDate(date);
             sunData.setCity(location.getCity());
@@ -85,7 +86,7 @@ public class SunDataService extends IntentService {
             }
 
             persistenceManager.saveSunInformation(sunData);
-        }
+        //}
 
         sendSunData(resultReceiver, sunData);
     }
@@ -95,33 +96,31 @@ public class SunDataService extends IntentService {
         String latitude = String.valueOf(location.getLatitude());
 
         Uri.Builder builder = new Uri.Builder();
+
         builder.scheme("http")
                 .authority("api.openweathermap.org")
                 .appendPath("data")
                 .appendPath("2.5")
                 .appendPath("uvi")
-                .appendQueryParameter("appid", uvKEY)
+                .appendQueryParameter("appid", subKEY)
                 .appendQueryParameter("lat", latitude)
                 .appendQueryParameter("lon", longitude);
-
         return builder.build().toString();
     }
 
     private String createSunURL(LocationDTO location, LocalDate date){
         String longitude = String.valueOf(location.getLongitude());
         String latitude = String.valueOf(location.getLatitude());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String dateString = date.format(formatter);
 
         Uri.Builder builder = new Uri.Builder();
-        builder.scheme("https")
-                .authority("www.sonnenverlauf.de")
-                .appendPath("#")
-                .appendPath(longitude + "," + latitude + ",10")
-                .appendPath(dateString)
-                .appendPath("0")
-                .appendPath("0");
-        //example https://www.sonnenverlauf.de/#/48.8583,2.2945,10/2018.05.16/12:00/0/0
+        builder.scheme("http")
+                .authority("api.openweathermap.org")
+                .appendPath("data")
+                .appendPath("2.5")
+                .appendPath("weather")
+                .appendQueryParameter("appid", subKEY)
+                .appendQueryParameter("lat", latitude)
+                .appendQueryParameter("lon", longitude);
         return builder.build().toString();
     }
 
