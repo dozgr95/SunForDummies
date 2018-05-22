@@ -47,13 +47,13 @@ public class UvDataAPI extends AsyncTask<String, String, SunDataDTO> {
             if(uvValue < 3){
                 sunDataDTO.setSunburn("low");
                 sunDataDTO.setVitamin("low");
-            } else if(uvValue > 3  && uvValue < 6){
+            } else if(uvValue > 3  && uvValue < 6.01){
                 sunDataDTO.setSunburn("medium");
                 sunDataDTO.setVitamin("medium");
-            } else if (uvValue > 6 && uvValue < 9) {
+            } else if (uvValue > 6 && uvValue < 10.01) {
                 sunDataDTO.setSunburn("high");
                 sunDataDTO.setVitamin("high");
-            } else if (uvValue > 10) {
+            } else if (uvValue > 10.01) {
                 sunDataDTO.setSunburn("very high");
                 sunDataDTO.setVitamin("very high");
             } else {
