@@ -7,21 +7,6 @@
     android:layout_height="match_parent"
     tools:context="ch.hslu.mobpro.sunfordummies.DayActivity">
 
-    <TextView
-        android:id="@+id/txtAppTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Sun For Dummies!"
-        app:layout_constraintBottom_toTopOf="@+id/txtDateCity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/btnYesterday"
         android:layout_width="60dp"
@@ -50,12 +35,12 @@
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="60dp"
         android:text="@string/loading"
         app:layout_constraintEnd_toStartOf="@+id/btnTomorrow"
         app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toEndOf="@+id/btnYesterday"
-        app:layout_constraintTop_toBottomOf="@+id/txtAppTitle" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/titleSunrise"
@@ -78,24 +63,14 @@
         app:layout_constraintTop_toBottomOf="@+id/titleSunrise" />
 
     <TextView
-        android:id="@+id/titleMaxPosition"
+        android:id="@+id/titleClouds"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/maxposition"
+        android:text="@string/clouds"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleSunset" />
-
-    <TextView
-        android:id="@+id/titleAbove"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/above"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleMaxPosition" />
 
     <TextView
         android:id="@+id/titleUV"
@@ -105,7 +80,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/uv"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleAbove" />
+        app:layout_constraintTop_toBottomOf="@+id/titleClouds" />
 
     <TextView
         android:id="@+id/titleSunburn"
@@ -158,7 +133,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtSunrise" />
 
     <TextView
-        android:id="@+id/txtMaxPosition"
+        android:id="@+id/txtClouds"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginEnd="124dp"
@@ -168,16 +143,6 @@
         app:layout_constraintTop_toBottomOf="@+id/txtSunset" />
 
     <TextView
-        android:id="@+id/txtAbove"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/loading"
-        app:layout_constraintEnd_toStartOf="@+id/infoAbove"
-        app:layout_constraintTop_toBottomOf="@+id/txtMaxPosition" />
-
-    <TextView
         android:id="@+id/txtUV"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
@@ -185,7 +150,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/loading"
         app:layout_constraintEnd_toStartOf="@+id/infoUV"
-        app:layout_constraintTop_toBottomOf="@+id/txtAbove" />
+        app:layout_constraintTop_toBottomOf="@+id/txtClouds" />
 
     <TextView
         android:id="@+id/txtSunburn"
@@ -244,11 +209,11 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="168dp"
         android:onClick="showInfoUv"
         android:text="@string/info"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoAbove" />
+        app:layout_constraintTop_toBottomOf="@+id/btnTomorrow" />
 
     <Button
         android:id="@+id/infoEnergy"
@@ -261,14 +226,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoVitamin" />
 
-    <Button
-        android:id="@+id/infoAbove"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="168dp"
-        android:onClick="showInfoAbove"
-        android:text="@string/info"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnTomorrow" />
 </android.support.constraint.ConstraintLayout>

@@ -63,6 +63,11 @@ public class SunDataAPI extends AsyncTask<String, String, SunDataDTO> {
             Format formatter = new SimpleDateFormat("HH:mm");
             sunDataDTO.setSunrise(LocalTime.parse(formatter.format(sunriseDate)));
             sunDataDTO.setSunset(LocalTime.parse(formatter.format(sunsetDate)));
+
+            // clouds
+            JSONObject clouds = values.getJSONObject("clouds");
+
+
         } catch (Exception e){
             Log.i("DummyData", "sun data is not correctly read");
         }

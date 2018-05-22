@@ -101,10 +101,6 @@ public class DayActivity extends AppCompatActivity implements LocationObserver, 
         this.showMessage(getResources().getString(R.string.infoVitamin), getResources().getString(R.string.vitamin));
     }
 
-    public void showInfoAbove(View button){
-        this.showMessage(getResources().getString(R.string.infoAbove), getResources().getString(R.string.above));
-    }
-
     public void showInfoUv(View button){
         this.showMessage(getResources().getString(R.string.infoUv), getResources().getString(R.string.uv));
     }
@@ -138,21 +134,19 @@ public class DayActivity extends AppCompatActivity implements LocationObserver, 
 
     private void updateSunDataOnGUI(){
         TextView txtDateCity = findViewById(R.id.txtDateCity);
-        TextView txtMaxPosition = findViewById(R.id.txtMaxPosition);
+        TextView txtMaxPosition = findViewById(R.id.txtClouds);
         TextView txtSunburn = findViewById(R.id.txtSunburn);
         TextView txtSunrise = findViewById(R.id.txtSunrise);
         TextView txtSunset = findViewById(R.id.txtSunset);
         TextView txtUV = findViewById(R.id.txtUV);
-        TextView txtAbove35 = findViewById(R.id.txtAbove);
         TextView txtVitamin = findViewById(R.id.txtVitamin);
         TextView txtEnergy = findViewById(R.id.txtEnergy);
 
         txtDateCity.setText(getDateString(currentSunData.getDate()) + "  " + currentSunData.getCity());
-        txtMaxPosition.setText(String.valueOf(currentSunData.getMaxPosition()));
+        txtMaxPosition.setText(String.valueOf(currentSunData.getClouds()));
         txtSunburn.setText(currentSunData.getSunburn());
         txtSunrise.setText(getTimeString(currentSunData.getSunrise()));
         txtSunset.setText(getTimeString(currentSunData.getSunset()));
-        txtAbove35.setText(String.valueOf(currentSunData.getAbove()));
         txtVitamin.setText(currentSunData.getVitamin());
         txtEnergy.setText(String.valueOf(currentSunData.getEnergy()));
         txtUV.setText(String.valueOf(currentSunData.getUv()));

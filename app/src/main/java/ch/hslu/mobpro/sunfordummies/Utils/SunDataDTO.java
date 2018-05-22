@@ -13,11 +13,10 @@ public class SunDataDTO implements Serializable {
     private String city;
     private LocalDate date;
     private double uv;
-    private int maxPosition;
+    private int clouds;
     private LocalTime sunrise;
     private LocalTime sunset;
     private String sunburn;
-    private int above;
     private String vitamin;
     private double energy;
 
@@ -48,12 +47,12 @@ public class SunDataDTO implements Serializable {
         return uv;
     }
 
-    public int getMaxPosition() {
-        return maxPosition;
+    public int getClouds() {
+        return clouds;
     }
 
-    public void setMaxPosition(int maxPosition) {
-        this.maxPosition = maxPosition;
+    public void setClouds(int clouds) {
+        this.clouds = clouds;
     }
 
     public LocalTime getSunrise() {
@@ -80,14 +79,6 @@ public class SunDataDTO implements Serializable {
         this.sunburn = sunburn;
     }
 
-    public int getAbove() {
-        return above;
-    }
-
-    public void setAbove(int above) {
-        this.above = above;
-    }
-
     public String getVitamin() {
         return vitamin;
     }
@@ -109,11 +100,10 @@ public class SunDataDTO implements Serializable {
         jsonObject.put("city", getCity());
         jsonObject.put("day", getDate());
         jsonObject.put("uv", getUv());
-        jsonObject.put("maxPosition", getMaxPosition());
+        jsonObject.put("clouds", getClouds());
         jsonObject.put("sunburn", getSunburn());
         jsonObject.put("sunrise", getSunrise());
         jsonObject.put("sunset", getSunset());
-        jsonObject.put("above", getAbove());
         jsonObject.put("vitamin", getVitamin());
         jsonObject.put("energy", getEnergy());
         return jsonObject.toString();
@@ -126,11 +116,10 @@ public class SunDataDTO implements Serializable {
         sunDataDTO.setCity(jsonObject.getString("city"));
         sunDataDTO.setDate(LocalDate.parse(jsonObject.getString("day")));
         sunDataDTO.setUv(jsonObject.optDouble("uv", 0.0));
-        sunDataDTO.setMaxPosition(jsonObject.optInt("maxPosition", 0));
+        sunDataDTO.setClouds(jsonObject.optInt("clouds", 0));
         sunDataDTO.setSunburn(jsonObject.optString("sunburn", ""));
         sunDataDTO.setSunrise(parseLocalTime(jsonObject.optString("sunrise")));
         sunDataDTO.setSunset(parseLocalTime(jsonObject.optString("sunset")));
-        sunDataDTO.setAbove(jsonObject.optInt("above", 0));
         sunDataDTO.setVitamin(jsonObject.optString("vitamin", ""));
         sunDataDTO.setEnergy(jsonObject.optDouble("energy", 0.0));
 
