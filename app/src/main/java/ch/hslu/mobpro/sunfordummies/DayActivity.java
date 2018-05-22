@@ -91,6 +91,12 @@ public class DayActivity extends AppCompatActivity implements LocationObserver, 
                 new SunDataResultReceiver(this));
     }
 
+    public void onClickNext(View button) {
+        LocalDate date = currentSunData.getDate().plusDays(1);
+        SunDataService.retrieveSunData(this, currentLocation, date,
+                new SunDataResultReceiver(this));
+    }
+
     public void showInfoVitamin(View button){
         this.showMessage(getResources().getString(R.string.infoVitamin), getResources().getString(R.string.vitamin));
     }
