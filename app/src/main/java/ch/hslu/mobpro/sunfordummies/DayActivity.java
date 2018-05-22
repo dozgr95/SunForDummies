@@ -144,8 +144,8 @@ public class DayActivity extends AppCompatActivity implements LocationObserver, 
         txtDateCity.setText(getDateString(currentSunData.getDate()) + "  " + currentSunData.getCity());
         txtMaxPosition.setText(String.valueOf(currentSunData.getMaxPosition()));
         txtSunburn.setText(currentSunData.getSunburn());
-        //txtSunrise.setText(getTimeString(currentSunData.getSunrise()));
-        //txtSunset.setText(getTimeString(currentSunData.getSunset()));
+        txtSunrise.setText(getTimeString(currentSunData.getSunrise()));
+        txtSunset.setText(getTimeString(currentSunData.getSunset()));
         txtAbove35.setText(String.valueOf(currentSunData.getAbove()));
         txtVitamin.setText(currentSunData.getVitamin());
         txtEnergy.setText(String.valueOf(currentSunData.getEnergy()));
@@ -153,12 +153,20 @@ public class DayActivity extends AppCompatActivity implements LocationObserver, 
     }
 
     private String getDateString(LocalDate date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        return date.format(formatter);
+        if(date != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            return date.format(formatter);
+        } else {
+            return "";
+        }
     }
 
     private String getTimeString(LocalTime time){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return time.format(formatter);
+        if(time != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            return time.format(formatter);
+        } else {
+            return "";
+        }
     }
 }

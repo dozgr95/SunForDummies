@@ -42,14 +42,16 @@ public class AndroidLocator implements Locator {
 
         @Override
         public void onLocationChanged(Location location) {
-            LocationDTO dto = new LocationDTO(location.getLatitude(), location.getLongitude());
-            try {
-                List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                dto.setCity(addresses.get(0).getLocality());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(location != null) {
+                LocationDTO dto = new LocationDTO(location.getLatitude(), location.getLongitude());
+                try {
+                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                    dto.setCity(addresses.get(0).getLocality());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                observer.update(dto);
             }
-            observer.update(dto);
         }
 
         @Override

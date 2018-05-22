@@ -2,6 +2,8 @@ package ch.hslu.mobpro.sunfordummies.Data;
 
 import android.util.Log;
 
+import org.json.JSONException;
+
 import ch.hslu.mobpro.sunfordummies.Utils.*;
 
 import java.io.BufferedReader;
@@ -25,12 +27,17 @@ public class SunDataPersistenceManagerJSON implements SunDataPersistenceManager 
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))){
             writer.newLine();
-            writer.append(sunDataDTO.toJSON());
+            String jsonString = sunDataDTO.toJSON();
+            writer.append(jsonString);
+            writer.flush();
+            Log.i("Persistence write", jsonString);
         } catch (final IOException e){
-            Log.e("Persistence", e.toString());
+            Log.e("Persistence write", e.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        Log.e("Persistence", "Data saved");
+        Log.i("Persistence", "Data saved");
     }
 
     @Override
@@ -40,11 +47,16 @@ public class SunDataPersistenceManagerJSON implements SunDataPersistenceManager 
             String readLine;
 
             while((readLine = reader.readLine()) != null) {
-                if(checkIfIdMatches(readLine, date, city))
-                    return SunDataDTO.readJSON(readLine);
+                if(checkIfIdMatches(readLine, date, city)) {
+                    try {
+                        return SunDataDTO.readJSON(readLine);
+                    } catch (JSONException e) {
+                        return new EmptySunDataDTO();
+                    }
+                }
             }
         } catch (final IOException e){
-            Log.e("Persistence", e.toString());
+            Log.e("Persistence read", e.toString());
         }
 
         return new EmptySunDataDTO();

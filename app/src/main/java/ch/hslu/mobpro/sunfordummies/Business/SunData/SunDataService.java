@@ -4,8 +4,12 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.util.Log;
+
+import org.json.JSONException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -72,21 +76,22 @@ public class SunDataService extends IntentService {
         SunDataPersistenceManager persistenceManager = SunDataPersistenceManagerFactory.getPersistenceManager(this);
         SunDataDTO sunData = persistenceManager.findById(date, location.getCity());
 
-        // if... not needed for testing
-        //if(sunData instanceof EmptySunDataDTO){
+        if(sunData instanceof EmptySunDataDTO){
             sunData = new SunDataDTO();
             sunData.setDate(date);
             sunData.setCity(location.getCity());
 
             try {
-                new UvDataAPI(sunData).execute(createUvURL(location, date)).get();
-                new SunDataAPI(sunData).execute(createSunURL(location, date)).get();
+                AsyncTask uvAsyncTask = new UvDataAPI(sunData).execute(createUvURL(location, date));
+                AsyncTask sunAsyncTask = new SunDataAPI(sunData).execute(createSunURL(location, date));
+                sunAsyncTask.get();
+                uvAsyncTask.get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
 
             persistenceManager.saveSunInformation(sunData);
-        //}
+        }
 
         sendSunData(resultReceiver, sunData);
     }

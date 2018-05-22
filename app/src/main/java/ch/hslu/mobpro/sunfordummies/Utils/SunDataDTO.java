@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 
 
 public class SunDataDTO implements Serializable {
@@ -103,45 +104,49 @@ public class SunDataDTO implements Serializable {
         this.energy = energy;
     }
 
-    public String toJSON(){
+    public String toJSON() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("city", getCity());
-            jsonObject.put("day", getDate());
-            jsonObject.put("uv", getUv());
-            jsonObject.put("maxPosition", getMaxPosition());
-            jsonObject.put("sunburn", getSunburn());
-            jsonObject.put("sunrise", getSunrise());
-            jsonObject.put("sunset", getSunset());
-            jsonObject.put("above", getAbove());
-            jsonObject.put("vitamin", getVitamin());
-            jsonObject.put("energy", getEnergy());
-            return jsonObject.toString();
-        } catch (JSONException e) {
-            return "";
-        }
+        jsonObject.put("city", getCity());
+        jsonObject.put("day", getDate());
+        jsonObject.put("uv", getUv());
+        jsonObject.put("maxPosition", getMaxPosition());
+        jsonObject.put("sunburn", getSunburn());
+        jsonObject.put("sunrise", getSunrise());
+        jsonObject.put("sunset", getSunset());
+        jsonObject.put("above", getAbove());
+        jsonObject.put("vitamin", getVitamin());
+        jsonObject.put("energy", getEnergy());
+        return jsonObject.toString();
     }
 
-    public static SunDataDTO readJSON(String jsonString){
+    public static SunDataDTO readJSON(String jsonString) throws JSONException {
         SunDataDTO sunDataDTO = new SunDataDTO();
 
-        try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-
-            sunDataDTO.setCity(jsonObject.getString("city"));
-            sunDataDTO.setDate(LocalDate.parse(jsonObject.getString("day")));
-            sunDataDTO.setUv(jsonObject.getInt("uv"));
-            sunDataDTO.setMaxPosition(jsonObject.getInt("maxPosition"));
-            sunDataDTO.setSunburn(jsonObject.getString("sunburn"));
-            sunDataDTO.setSunrise(LocalTime.parse(jsonObject.getString("sunrise")));
-            sunDataDTO.setSunset(LocalTime.parse(jsonObject.getString("sunset")));
-            sunDataDTO.setAbove(jsonObject.getInt("above"));
-            sunDataDTO.setVitamin(jsonObject.getString("vitamin"));
-            sunDataDTO.setEnergy(jsonObject.getDouble("energy"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        JSONObject jsonObject = new JSONObject(jsonString);
+        sunDataDTO.setCity(jsonObject.getString("city"));
+        sunDataDTO.setDate(LocalDate.parse(jsonObject.getString("day")));
+        sunDataDTO.setUv(jsonObject.optDouble("uv", 0.0));
+        sunDataDTO.setMaxPosition(jsonObject.optInt("maxPosition", 0));
+        sunDataDTO.setSunburn(jsonObject.optString("sunburn", ""));
+        sunDataDTO.setSunrise(parseLocalTime(jsonObject.optString("sunrise")));
+        sunDataDTO.setSunset(parseLocalTime(jsonObject.optString("sunset")));
+        sunDataDTO.setAbove(jsonObject.optInt("above", 0));
+        sunDataDTO.setVitamin(jsonObject.optString("vitamin", ""));
+        sunDataDTO.setEnergy(jsonObject.optDouble("energy", 0.0));
 
         return sunDataDTO;
+    }
+
+    private static LocalTime parseLocalTime(String time) {
+        LocalTime localTime = null;
+        if(time != null) {
+            try {
+                localTime = LocalTime.parse(time);
+            } catch (DateTimeParseException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return localTime;
     }
 }

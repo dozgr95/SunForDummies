@@ -42,6 +42,7 @@ public class SunDataAPI extends AsyncTask<String, String, JSONObject> {
                 String json = reader.readLine();
                 jsonobject = new JSONObject(json);
             }
+
             return jsonobject;
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,7 +62,6 @@ public class SunDataAPI extends AsyncTask<String, String, JSONObject> {
             Format formatter = new SimpleDateFormat("HH:mm");
             sunDataDTO.setSunrise(LocalTime.parse(formatter.format(sunriseDate)));
             sunDataDTO.setSunset(LocalTime.parse(formatter.format(sunsetDate)));
-
         } catch (Exception e){
             Log.i("DummyData", "sun data is not correctly read");
         }
