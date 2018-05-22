@@ -13,7 +13,7 @@ import java.net.URL;
 
 import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
 
-public class UvDataAPI extends AsyncTask<String, String, Double> {
+public class UvDataAPI extends AsyncTask<String, String, SunDataDTO> {
     private SunDataDTO sunDataDTO;
 
     public UvDataAPI(SunDataDTO sunDataDTO){
@@ -21,9 +21,8 @@ public class UvDataAPI extends AsyncTask<String, String, Double> {
     }
 
     @Override
-    protected Double doInBackground(String... strings) {
+    protected SunDataDTO doInBackground(String... strings) {
         URL request;
-        String uvValue = "";
         try {
             request = new URL(strings[0]);
             HttpURLConnection httpConnection = (HttpURLConnection) request.openConnection();
@@ -33,15 +32,16 @@ public class UvDataAPI extends AsyncTask<String, String, Double> {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 String json = reader.readLine();
                 JSONObject jsonobject = new JSONObject(json);
-                uvValue = jsonobject.optString("value");
+                String uvValue = jsonobject.optString("value");
+                setSunDataDTO(Double.parseDouble(uvValue));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Double.valueOf(uvValue);
+        return sunDataDTO;
     }
 
-    protected void onPostExecute(Double uvValue) {
+    protected void setSunDataDTO(Double uvValue) {
         try{
             sunDataDTO.setUv(uvValue);
             if(uvValue < 3){

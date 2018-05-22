@@ -22,14 +22,14 @@ import java.util.TimeZone;
 
 import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
 
-public class SunDataAPI extends AsyncTask<String, String, JSONObject> {
+public class SunDataAPI extends AsyncTask<String, String, SunDataDTO> {
     private SunDataDTO sunDataDTO;
     public SunDataAPI(SunDataDTO sunDataDTO){
         this.sunDataDTO = sunDataDTO;
     }
 
     @Override
-    protected JSONObject doInBackground(String... strings) {
+    protected SunDataDTO doInBackground(String... strings) {
         URL request;
         JSONObject jsonobject = null;
         try {
@@ -43,14 +43,15 @@ public class SunDataAPI extends AsyncTask<String, String, JSONObject> {
                 jsonobject = new JSONObject(json);
             }
 
-            return jsonobject;
+            setSunDataDTO(jsonobject);
+            return sunDataDTO;
         } catch (Exception e) {
             e.printStackTrace();
-            return jsonobject;
+            return null;
         }
     }
 
-    protected void onPostExecute(JSONObject values) {
+    protected void setSunDataDTO(JSONObject values) {
         try{
             //set sunDataDTO
             JSONObject sys = values.getJSONObject("sys");
