@@ -40,7 +40,7 @@ public class DayActivity extends AppCompatActivity implements LocationObserver, 
         try {
             registerLocationObserver();
         } catch (LocationPermissionException e) {
-            requestPermissions(new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, LOCATION_PERMISSION_REQUEST);
+            requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, LOCATION_PERMISSION_REQUEST);
         } catch (ProviderException e){
             //inform user
         }

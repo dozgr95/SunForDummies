@@ -12,12 +12,12 @@ import java.util.Locale;
 
 public class LocatorFactory {
     public static Locator createLocator(Context context) throws LocationPermissionException, ProviderException{
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             throw new LocationPermissionException();
         }
 
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             throw new ProviderException();
         }
 

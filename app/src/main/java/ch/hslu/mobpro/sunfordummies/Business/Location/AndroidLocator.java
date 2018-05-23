@@ -24,8 +24,8 @@ public class AndroidLocator implements Locator {
     @SuppressLint("MissingPermission")
     public void addListener(LocationObserver observer) {
         LocationListenerAdapter locationListener = new LocationListenerAdapter(observer);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 0, locationListener);
-        locationListener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 0, locationListener);
+        locationListener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
     }
 
     @Override
