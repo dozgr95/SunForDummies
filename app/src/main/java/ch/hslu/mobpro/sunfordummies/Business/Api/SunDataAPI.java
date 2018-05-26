@@ -13,11 +13,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
@@ -66,7 +63,7 @@ public class SunDataAPI extends AsyncTask<String, String, SunDataDTO> {
 
             // clouds
             JSONObject clouds = values.getJSONObject("clouds");
-
+            sunDataDTO.setClouds(clouds.getInt("all"));
 
         } catch (Exception e){
             Log.i("DummyData", "sun data is not correctly read");

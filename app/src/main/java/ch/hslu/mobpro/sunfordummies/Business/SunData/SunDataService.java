@@ -16,6 +16,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 
+import ch.hslu.mobpro.sunfordummies.Business.Api.EnergyDataAPI;
 import ch.hslu.mobpro.sunfordummies.Business.Api.SunDataAPI;
 import ch.hslu.mobpro.sunfordummies.Business.Api.UvDataAPI;
 import ch.hslu.mobpro.sunfordummies.Business.Location.LocationDTO;
@@ -84,8 +85,10 @@ public class SunDataService extends IntentService {
             try {
                 AsyncTask uvAsyncTask = new UvDataAPI(sunData).execute(createUvURL(location, date));
                 AsyncTask sunAsyncTask = new SunDataAPI(sunData).execute(createSunURL(location, date));
+                AsyncTask energyAsyncTask = new EnergyDataAPI(sunData).execute(createEnergyURL(location, date));
                 sunAsyncTask.get();
                 uvAsyncTask.get();
+                energyAsyncTask.get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
@@ -110,6 +113,33 @@ public class SunDataService extends IntentService {
                 .appendQueryParameter("appid", subKEY)
                 .appendQueryParameter("lat", latitude)
                 .appendQueryParameter("lon", longitude);
+        return builder.build().toString();
+    }
+
+    private String createEnergyURL(LocationDTO location, LocalDate date){
+        String longitude;
+        if(location.getLongitude() > 0){
+            longitude = String.valueOf((int) location.getLongitude());
+        }else{
+            longitude = String.valueOf(45); // temp problem fix
+        }
+        String latitude;
+        if(location.getLatitude() > 0){
+             latitude = String.valueOf((int) location.getLatitude());
+        }else{
+             latitude = String.valueOf(45); // temp problem fix
+        }
+
+        Uri.Builder builder = new Uri.Builder();
+
+        builder.scheme("http")
+                .authority("re.jrc.ec.europa.eu")
+                .appendPath("pvgis5")
+                .appendPath("PVcalc.php")
+                .appendQueryParameter("lat", latitude)
+                .appendQueryParameter("lon", longitude)
+                .appendQueryParameter("peakpower", "1")
+                .appendQueryParameter("loss", "15");
         return builder.build().toString();
     }
 
