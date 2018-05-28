@@ -13,13 +13,20 @@ import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
+import ca.rmen.sunrisesunset.SunriseSunset;
 import ch.hslu.mobpro.sunfordummies.Business.Api.EnergyDataAPI;
 import ch.hslu.mobpro.sunfordummies.Business.Api.SunDataAPI;
 import ch.hslu.mobpro.sunfordummies.Business.Api.UVIForecastAPI;
@@ -43,6 +50,7 @@ public class SunDataService extends IntentService {
     private static final String EXTRA_DATE = "ch.hslu.mobpro.sunfordummies.Business.SunData.extra.DATE";
 
     private static final String subKEY = "68e0ca9dbc72500e3c5d8ea0c24d6306";
+    private SunDataPersistenceManager persistenceManager;
 
     public SunDataService() {
         super("SunDataService");
@@ -79,30 +87,21 @@ public class SunDataService extends IntentService {
     }
 
     private void handleActionGetData(ResultReceiver resultReceiver, LocationDTO location, LocalDate date) {
-        SunDataPersistenceManager persistenceManager = SunDataPersistenceManagerFactory.getPersistenceManager(this);
+        persistenceManager = SunDataPersistenceManagerFactory.getPersistenceManager(this);
         SunDataDTO sunData = persistenceManager.findById(date, location.getCity());
 
         if(sunData instanceof EmptySunDataDTO){
-            sunData = new SunDataDTO();
-            sunData.setDate(date);
-            sunData.setCity(location.getCity());
-
             try {
                 if(LocalDate.now().isEqual(date)) {
-                    AsyncTask uvAsyncTask = new UvDataAPI(sunData).execute(createUvURL(location, date));
-                    AsyncTask sunAsyncTask = new SunDataAPI(sunData).execute(createSunURL(location, date));
-                    AsyncTask energyAsyncTask = new EnergyDataAPI(sunData).execute(createEnergyURL(location, date));
-                    sunAsyncTask.get();
-                    uvAsyncTask.get();
-                    energyAsyncTask.get();
+                    sunData = downloadSunData(location, date);
                     persistenceManager.saveSunInformation(sunData);
-
                 } else {
-                    List<SunDataDTO> sunDataDTOs = getForecastData(location);
+                    List<SunDataDTO> sunDataDTOs = downloadForecastData(location);
                     for(SunDataDTO sunDataDTO : sunDataDTOs) {
-                        sunDataDTO.setCity(location.getCity());
-                        sunDataDTO.setSunrise(LocalTime.of(5,30));
-                        sunDataDTO.setSunset(LocalTime.of(20,45));
+                        List<LocalTime> times = getSunriseSunset(location);
+                        sunDataDTO.setSunrise(times.get(0));
+                        sunDataDTO.setSunset(times.get(1));
+
                         if(sunDataDTO.getDate().isEqual(date)) {
                             sunData = sunDataDTO;
                         }
@@ -116,6 +115,21 @@ public class SunDataService extends IntentService {
         }
 
         sendSunData(resultReceiver, sunData);
+    }
+
+    private SunDataDTO downloadSunData(LocationDTO location, LocalDate date) throws ExecutionException, InterruptedException {
+        SunDataDTO sunData = new SunDataDTO();
+        sunData.setDate(date);
+        sunData.setCity(location.getCity());
+
+        AsyncTask uvAsyncTask = new UvDataAPI(sunData).execute(createUvURL(location, date));
+        AsyncTask sunAsyncTask = new SunDataAPI(sunData).execute(createSunURL(location, date));
+        AsyncTask energyAsyncTask = new EnergyDataAPI(sunData).execute(createEnergyURL(location, date));
+        sunAsyncTask.get();
+        uvAsyncTask.get();
+        energyAsyncTask.get();
+
+        return sunData;
     }
 
     private String createUvURL(LocationDTO location, LocalDate date){
@@ -179,13 +193,13 @@ public class SunDataService extends IntentService {
         return builder.build().toString();
     }
 
-    private List<SunDataDTO> getForecastData(LocationDTO locationDTO) {
+    private List<SunDataDTO> downloadForecastData(LocationDTO locationDTO) throws ExecutionException, InterruptedException {
         List<SunDataDTO> sunDataDTOs = new ArrayList<>();
         try {
-            UVIForecastAPI uviForecastAPI = new UVIForecastAPI();
+            UVIForecastAPI uviForecastAPI = new UVIForecastAPI(locationDTO.getCity());
             uviForecastAPI.execute(createUvForecastURL(locationDTO));
             sunDataDTOs.addAll(uviForecastAPI.get());
-        } catch (MalformedURLException | InterruptedException | ExecutionException e) {
+        } catch (MalformedURLException e) {
         }
 
         return sunDataDTOs;
@@ -208,6 +222,24 @@ public class SunDataService extends IntentService {
                 .appendQueryParameter("cnt", "5");
 
         return new URL(builder.build().toString());
+    }
+
+    private List<LocalTime> getSunriseSunset(LocationDTO location) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        Calendar[] sunriseSunset = SunriseSunset.getSunriseSunset(calendar,
+                location.getLatitude(), location.getLongitude());
+
+        List<LocalTime> times = new ArrayList<>();
+        times.add(convertInstant(sunriseSunset[0].toInstant()));
+        times.add(convertInstant(sunriseSunset[1].toInstant()));
+
+        return times;
+    }
+
+    private LocalTime convertInstant(Instant instant) {
+        return LocalDateTime.ofInstant(instant,
+                ZoneId.of("Europe/Paris")).toLocalTime();
     }
 
     private void sendSunData(ResultReceiver resultReceiver, SunDataDTO sunData){

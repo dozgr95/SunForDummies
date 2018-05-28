@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import ch.hslu.mobpro.sunfordummies.Business.Location.LocationDTO;
 import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
 import ch.hslu.mobpro.sunfordummies.Utils.UVConverter;
 
@@ -32,6 +33,12 @@ import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 
 public class UVIForecastAPI extends AsyncTask<URL, String, List<SunDataDTO>> {
+    private String city;
+
+    public UVIForecastAPI(String city) {
+        this.city = city;
+    }
+
     @Override
     protected List<SunDataDTO> doInBackground(URL... urls) {
         URL request;
@@ -67,6 +74,8 @@ public class UVIForecastAPI extends AsyncTask<URL, String, List<SunDataDTO>> {
                 String level = UVConverter.getSunburnAndVitamin(uvIndex);
                 sunDataDTO.setSunburn(level);
                 sunDataDTO.setVitamin(level);
+
+                sunDataDTO.setCity(city);
                 String date = jsonObjectDay.getString("date_iso");
                 sunDataDTO.setDate(
                         LocalDateTime.parse(date.substring(0, date.length() - 1), ISO_DATE_TIME).
