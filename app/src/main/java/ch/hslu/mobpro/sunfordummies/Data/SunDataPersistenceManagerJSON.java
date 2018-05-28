@@ -26,9 +26,9 @@ public class SunDataPersistenceManagerJSON implements SunDataPersistenceManager 
         File file = new File(fileDir, "app.json");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))){
-            writer.newLine();
             String jsonString = sunDataDTO.toJSON();
             writer.append(jsonString);
+            writer.newLine();
             writer.flush();
             Log.i("Persistence write", jsonString);
         } catch (final IOException e){

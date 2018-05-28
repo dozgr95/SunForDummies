@@ -11,13 +11,18 @@ import android.util.Log;
 
 import org.json.JSONException;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import ch.hslu.mobpro.sunfordummies.Business.Api.EnergyDataAPI;
 import ch.hslu.mobpro.sunfordummies.Business.Api.SunDataAPI;
+import ch.hslu.mobpro.sunfordummies.Business.Api.UVIForecastAPI;
 import ch.hslu.mobpro.sunfordummies.Business.Api.UvDataAPI;
 import ch.hslu.mobpro.sunfordummies.Business.Location.LocationDTO;
 import ch.hslu.mobpro.sunfordummies.Data.SunDataPersistenceManager;
@@ -83,17 +88,31 @@ public class SunDataService extends IntentService {
             sunData.setCity(location.getCity());
 
             try {
-                AsyncTask uvAsyncTask = new UvDataAPI(sunData).execute(createUvURL(location, date));
-                AsyncTask sunAsyncTask = new SunDataAPI(sunData).execute(createSunURL(location, date));
-                AsyncTask energyAsyncTask = new EnergyDataAPI(sunData).execute(createEnergyURL(location, date));
-                sunAsyncTask.get();
-                uvAsyncTask.get();
-                energyAsyncTask.get();
+                if(LocalDate.now().isEqual(date)) {
+                    AsyncTask uvAsyncTask = new UvDataAPI(sunData).execute(createUvURL(location, date));
+                    AsyncTask sunAsyncTask = new SunDataAPI(sunData).execute(createSunURL(location, date));
+                    AsyncTask energyAsyncTask = new EnergyDataAPI(sunData).execute(createEnergyURL(location, date));
+                    sunAsyncTask.get();
+                    uvAsyncTask.get();
+                    energyAsyncTask.get();
+                    persistenceManager.saveSunInformation(sunData);
+
+                } else {
+                    List<SunDataDTO> sunDataDTOs = getForecastData(location);
+                    for(SunDataDTO sunDataDTO : sunDataDTOs) {
+                        sunDataDTO.setCity(location.getCity());
+                        sunDataDTO.setSunrise(LocalTime.of(5,30));
+                        sunDataDTO.setSunset(LocalTime.of(20,45));
+                        if(sunDataDTO.getDate().isEqual(date)) {
+                            sunData = sunDataDTO;
+                        }
+
+                        persistenceManager.saveSunInformation(sunDataDTO);
+                    }
+                }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
-
-            persistenceManager.saveSunInformation(sunData);
         }
 
         sendSunData(resultReceiver, sunData);
@@ -104,7 +123,6 @@ public class SunDataService extends IntentService {
         String latitude = String.valueOf(location.getLatitude());
 
         Uri.Builder builder = new Uri.Builder();
-
         builder.scheme("http")
                 .authority("api.openweathermap.org")
                 .appendPath("data")
@@ -113,6 +131,7 @@ public class SunDataService extends IntentService {
                 .appendQueryParameter("appid", subKEY)
                 .appendQueryParameter("lat", latitude)
                 .appendQueryParameter("lon", longitude);
+
         return builder.build().toString();
     }
 
@@ -156,7 +175,39 @@ public class SunDataService extends IntentService {
                 .appendQueryParameter("appid", subKEY)
                 .appendQueryParameter("lat", latitude)
                 .appendQueryParameter("lon", longitude);
+
         return builder.build().toString();
+    }
+
+    private List<SunDataDTO> getForecastData(LocationDTO locationDTO) {
+        List<SunDataDTO> sunDataDTOs = new ArrayList<>();
+        try {
+            UVIForecastAPI uviForecastAPI = new UVIForecastAPI();
+            uviForecastAPI.execute(createUvForecastURL(locationDTO));
+            sunDataDTOs.addAll(uviForecastAPI.get());
+        } catch (MalformedURLException | InterruptedException | ExecutionException e) {
+        }
+
+        return sunDataDTOs;
+    }
+
+    private URL createUvForecastURL(LocationDTO location) throws MalformedURLException {
+        String longitude = String.valueOf(location.getLongitude());
+        String latitude = String.valueOf(location.getLatitude());
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("api.openweathermap.org")
+                .appendPath("data")
+                .appendPath("2.5")
+                .appendPath("uvi")
+                .appendPath("forecast")
+                .appendQueryParameter("appid", subKEY)
+                .appendQueryParameter("lat", latitude)
+                .appendQueryParameter("lon", longitude)
+                .appendQueryParameter("cnt", "5");
+
+        return new URL(builder.build().toString());
     }
 
     private void sendSunData(ResultReceiver resultReceiver, SunDataDTO sunData){

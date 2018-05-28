@@ -86,15 +86,19 @@ public class DayActivity extends AppCompatActivity implements LocationObserver, 
     }
 
     public void onClickPrevious(View button) {
-        LocalDate date = currentSunData.getDate().minusDays(1);
-        SunDataService.retrieveSunData(this, currentLocation, date,
-                new SunDataResultReceiver(this));
+        if(currentSunData.getDate().isAfter(LocalDate.now())) {
+            LocalDate date = currentSunData.getDate().minusDays(1);
+            SunDataService.retrieveSunData(this, currentLocation, date,
+                    new SunDataResultReceiver(this));
+        }
     }
 
     public void onClickNext(View button) {
-        LocalDate date = currentSunData.getDate().plusDays(1);
-        SunDataService.retrieveSunData(this, currentLocation, date,
-                new SunDataResultReceiver(this));
+        if(currentSunData.getDate().isBefore(LocalDate.now().plusDays(6))) {
+            LocalDate date = currentSunData.getDate().plusDays(1);
+            SunDataService.retrieveSunData(this, currentLocation, date,
+                    new SunDataResultReceiver(this));
+        }
     }
 
     public void showInfoVitamin(View button){

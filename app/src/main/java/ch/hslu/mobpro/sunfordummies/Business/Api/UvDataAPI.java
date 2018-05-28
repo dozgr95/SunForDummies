@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import ch.hslu.mobpro.sunfordummies.Utils.SunDataDTO;
+import ch.hslu.mobpro.sunfordummies.Utils.UVConverter;
 
 public class UvDataAPI extends AsyncTask<String, String, SunDataDTO> {
     private SunDataDTO sunDataDTO;
@@ -44,22 +45,9 @@ public class UvDataAPI extends AsyncTask<String, String, SunDataDTO> {
     protected void setSunDataDTO(Double uvValue) {
         try{
             sunDataDTO.setUv(uvValue);
-            if(uvValue < 3){
-                sunDataDTO.setSunburn("low");
-                sunDataDTO.setVitamin("low");
-            } else if(uvValue > 3  && uvValue < 6.01){
-                sunDataDTO.setSunburn("medium");
-                sunDataDTO.setVitamin("medium");
-            } else if (uvValue > 6 && uvValue < 10.01) {
-                sunDataDTO.setSunburn("high");
-                sunDataDTO.setVitamin("high");
-            } else if (uvValue > 10.01) {
-                sunDataDTO.setSunburn("very high");
-                sunDataDTO.setVitamin("very high");
-            } else {
-                sunDataDTO.setSunburn("not Available");
-                sunDataDTO.setVitamin("not Available");
-            }
+            String level = UVConverter.getSunburnAndVitamin(uvValue);
+            sunDataDTO.setSunburn(level);
+            sunDataDTO.setVitamin(level);
         } catch (Exception e){
             Log.i("DummyData", "uv could not be read");
         }
